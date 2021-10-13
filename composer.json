@@ -46,6 +46,7 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "fakerphp/faker": "^1.16",
+        "friendsoftwig/twigcs": "^5.1",
         "nunomaduro/phpinsights": "^2.0",
         "phpmd/phpmd": "^2.10",
         "phpstan/phpstan": "^0.12.99",
