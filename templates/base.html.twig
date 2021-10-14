@@ -1,19 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>{% block title %}SnowTricks{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
         {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
+            {{ encore_entry_link_tags('app') }}
         {% endblock %}
 
         {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
+            {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
     <body>
+        <!-- ======= Header ======= -->
+        <header id="header" class="fixed-top header-transparent">
+        <div class="container d-flex align-items-center justify-content-between">
+
+            <div class="logo d-none d-lg-block">
+            <h1 class="text-light"><a href="{{ path('home') }}"><span>SnowTricks</span></a></h1>
+            </div>
+
+            <nav id="navbar" class="navbar">
+            <ul>
+                <li><a class="nav-link active" href="{{ path('home') }}">Home</a></li>
+                <li><a class="nav-link scrollto" href="#listTrickTitle">Tricks</a></li>
+                <li><a class="nav-link" href="#">Sign in</a></li>
+                <li><a class="nav-link" href="#">Sing up</a></li>
+            </ul>
+            <!--<i class="bi bi-list mobile-nav-toggle"></i>-->
+            </nav><!-- .navbar -->
+
+        </div>
+        </header><!-- End Header -->
+        <!-- ======= Hero Section ======= -->
+        <section id="hero">
+            <div class="hero-container" data-aos="fade-up">
+            <h1>Welcome to SnowTricks</h1>
+            <h2>We are a snowboard fan community</h2>
+            </div>
+
+            <a href="#listTrickTitle" id="goToDownButton"
+            class="back-to-top d-flex align-items-center justify-content-center" style="position:absolute;right:0;bottom:0;">
+            <i class="bi bi-arrow-down-short"></i>
+            </a>
+
+
+        </section><!-- End Hero -->
+        <main id="main">
         {% block body %}{% endblock %}
+        </main>
+          <!-- ======= Footer ======= -->
+        <footer id="footer">
+            <div class="container">
+            <div class="copyright">
+                &copy; Copyright <strong><span>2021</span></strong>
+            </div>
+            <div class="credits">
+                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            </div>
+            </div>
+        </footer>
+        <!-- End Footer -->
+        <!-- Mobile Navbar -->
+        <nav class="navbar fixed-bottom navbar-light bg-light d-lg-none">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <a href="{{ path('home') }}" class="text-dark"><i class="bi bi-house-door-fill"></i></a>
+                    </div>
+                    <div class="col-6">
+                        <a href="" class="text-dark"><i class="bi bi-box-arrow-in-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- End Mobile Navbar -->
+        {% block javascript %}
+        {% endblock %}
     </body>
 </html>

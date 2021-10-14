@@ -16,11 +16,11 @@ final class TrickFixtures extends Fixture
     {
         $faker = Factory::create('fr FR');
 
-        for ($i = 0; $i < 10; ++$i) {
+        for ($i = 0; $i < 40; ++$i) {
             $trick = new Trick();
             $slugger = new AsciiSlugger();
 
-            $trick->setName($faker->unique->sentence());
+            $trick->setName($faker->unique->sentence(2, false));
             $trick->setSlug($slugger->slug($trick->getName())->toString());
             $trick->setDescription($faker->paragraph(mt_rand(1, 3)));
 

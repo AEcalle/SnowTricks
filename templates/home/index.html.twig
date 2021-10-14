@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SnowTricks{% endblock %}
+
+{% block body %}
+    <section id="services" class="services">
+        <div class="container">
+
+            <div class="section-title" id="listTrickTitle" data-aos="fade-in" data-aos-delay="100">
+                <h2>Tricks</h2>
+            </div>
+
+            {% for trick in tricks %}
+                {% if loop.first or (loop.index - 1) % 5 == 0 %}
+                <div class="row justify-content-center">
+                {% endif %}
+                    <div class="col-md-6 col-lg-2 mb-5" id="trick{{ loop.index }}" {% if loop.index > 15 %}style="display:none;"{% endif %}>
+                        <div class="card" data-aos="fade-up">
+                            <img class="card-img-top" src="http://via.placeholder.com/640x360" alt="Card image cap">
+                            <div class="card-body">
+                                <p>
+                                    <a href="">{{ trick.name }}</a>
+                                </p>
+                                <p class="text-end">
+                                    <a href="" class="text-dark"><i class="bi bi-pencil-fill"></i></a>
+                                    <a href="" class="text-dark ms-3" onclick="return window.confirm('Comfirm you want to delete this trick.')"><i class="bi bi-trash-fill"></i></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% if loop.last or loop.index % 5 == 0 %}
+                </div>
+                {% endif %}
+            {% else %}
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>No Trick in database</p>
+                </div>
+            </div>
+            {% endfor %}
+            {% if tricks|length > 15 %}
+            <div class="row">
+                <div class="col-12 text-center">
+                    <input type="hidden" id="listTricksIndex" value="16">
+                    <button class="btn btn-primary" type="button" id="loadMoreButton" onclick="loadMoreTrick({{ tricks|length }});">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span class="sr-only">Load more...</span>
+                    </button>
+                </div>
+            </div>
+            <div class="row justify-content-end">
+                <div class="col-2">
+                    <a href="#listTrickTitle" id="backToTopButton"
+                    class="back-to-top d-flex align-items-center justify-content-center" style="visibility:hidden;">
+                        <i class="bi bi-arrow-up-short"></i>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+    </section>
+{% endblock %}
+{% block javascript %}
+<script>
+    function loadMoreTrick(nbTricks) {
+        var index = parseInt(document.getElementById('listTricksIndex').value);
+        for (var i = index; i<(index + 15) ;i++) {
+            if (document.getElementById('trick'+i)){
+            document.getElementById('trick'+i).style.display = 'flex';
+            }
+        }
+        document.getElementById('listTricksIndex').value = index + 15;
+        document.getElementById('backToTopButton').style.visibility = 'visible';
+        if (parseInt(document.getElementById('listTricksIndex').value)>nbTricks){
+            document.getElementById('loadMoreButton').style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}
