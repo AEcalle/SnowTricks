@@ -67,10 +67,7 @@ return [
         \NunoMaduro\PhpInsights\Domain\Sniffs\ForbiddenSetterSniff::class,
         \SlevomatCodingStandard\Sniffs\Classes\SuperfluousAbstractClassNamingSniff::class,
         \SlevomatCodingStandard\Sniffs\TypeHints\ParameterTypeHintSniff::class,
-        \SlevomatCodingStandard\Sniffs\Commenting\UselessFunctionDocCommentSniff::class,
         \SlevomatCodingStandard\Sniffs\Classes\SuperfluousExceptionNamingSniff::class,
-        \PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineEndingsSniff::class,
-        \SlevomatCodingStandard\Sniffs\TypeHints\DisallowArrayTypeHintSyntaxSniff::class,
     ],
 
     'config' => [
