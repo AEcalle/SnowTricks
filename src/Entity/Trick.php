@@ -9,21 +9,21 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
-final class Trick
+#[UniqueEntity('name')]
+#[UniqueEntity('slug')]
+class Trick
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, unique:true)]
     #[Assert\NotBlank]
-    #[Assert\Unique]
     private string $name;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, unique:true)]
     #[Assert\NotBlank]
-    #[Assert\Unique]
     private string $slug;
 
     #[ORM\Column(type: 'text')]
@@ -40,11 +40,9 @@ final class Trick
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
     public function getSlug(): string
@@ -52,11 +50,9 @@ final class Trick
         return $this->slug;
     }
 
-    public function setSlug(string $slug): self
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
-
-        return $this;
     }
 
     public function getDescription(): string
@@ -64,10 +60,8 @@ final class Trick
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(string $description): void
     {
         $this->description = $description;
-
-        return $this;
     }
 }
