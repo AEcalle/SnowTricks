@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ trick.name }}{% endblock %}
+{% block h1 %}{{ trick.name }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row py-5">
+        {% for image in trick.images %}
+            <div class="col-12 col-lg-2">
+                <img class="img-fluid w-100" src="{{ image.filename }}" alt="">
+            </div>
+        {% endfor %}
+        {% for video in trick.videos %}
+            <div class="col-12 col-lg-2">
+                <iframe style="width:100%" src="{{ video.url }}" title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row py-5">
+        <div class="col-12">
+            {{ trick.description }}
+        </div>
+    </div>
+    <div class="row py-5">
+        <div class="col-12">
+            Group : {{ trick.category.name }}
+        </div>
+    </div>
+    <hr>
+        <div class="row py-5" id="CommentForm">
+            <div class="col-12">
+                <h2>Add a comment</h2>
+                {% for message in app.flashes('notice') %}
+                    <div class="text-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                {{ form_start(form) }}
+                    <div class="text-danger">
+                        {{ form_errors(form) }}
+                    </div>
+                    {{ form_row(form.content) }}
+                    <input class="btn btn-primary" type="submit" value="Submit">
+                {{ form_end(form) }}
+            </div>
+        </div>
+    <hr>
+    {% for comment in comments %}
+        <div class="row py-5 align-items-center">
+            <div class="col-4 col-lg-1">
+                <img class="img-fluid w-100 rounded-circle" src="{{ comment.user.picture }}" alt="">
+            </div>
+            <div class="col-8 col-lg-11">
+                <p>{{ comment.content }}</p>
+                <p class="fst-italic small">
+                    Le <span class="fw-bold">{{ comment.createdAt|date('d/m/Y') }}</span>
+                    à <span class="fw-bold">{{ comment.createdAt|date('H:i') }}</span>
+                    par <span class="fw-bold">{{ comment.user.username }}</span>
+                </p>
+            </div>
+        </div>
+    {% else %}
+        <div class="row py-5">
+            <div class="col-12">
+                0 Comment
+            </div>
+        </div>
+    {% endfor %}
+        <div id="moreComments">
+        </div>
+        <input type="hidden" id="commentsIndex" value="5">
+        <div class="row py-5">
+            <div class="col-12 text-center">
+                <button class="btn btn-primary" type="button" onclick="loadMore();">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span class="sr-only">Load more...</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        function loadMore(){
+            var index = document.getElementById('commentsIndex').value;
+            fetch("/comment/loadMore/{{ trick.id }}/"+index)
+            .then(response => response.json())
+            .then(data => {
+                for (var key in data){
+                    document.getElementById('moreComments').innerHTML += `{% include "trick/_comment_template.html.twig" %}`;
+
+                    var commentContent = document.getElementsByClassName('commentContent');
+                    commentContent[commentContent.length-1].innerHTML = data[key].content;
+
+                    var commentDates = document.getElementsByClassName('commentDate');
+                    commentDates[commentDates.length-1].innerHTML = new Date(data[key].createdAt).toLocaleDateString("fr-FR");
+
+                    var commentTimes = document.getElementsByClassName('commentTime');
+                    commentTimes[commentTimes.length-1].innerHTML = new Date(data[key].createdAt).toLocaleTimeString("fr-FR", {hour: '2-digit', minute:'2-digit'});
+
+                    var commentUsers = document.getElementsByClassName('commentUser');
+                    commentUsers[commentUsers.length-1].innerHTML = data[key].user.username;
+
+                    var commentUserPictures = document.getElementsByClassName('commentUserPicture');
+                    commentUserPictures[commentUserPictures.length-1].setAttribute('src',data[key].user.picture);
+
+                }
+                document.getElementById('commentsIndex').value = parseInt(index) * 2;
+            });
+        }
+    </script>
+{% endblock %}

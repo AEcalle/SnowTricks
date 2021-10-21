@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}SnowTricks{% endblock %}
+{% block h1 %}Welcome to SnowTricks{% endblock %}
+{% block slogan %}We are a snowboard fan community{% endblock %}
 
 {% block body %}
     <section id="services" class="services">
@@ -19,7 +21,7 @@
                             <img class="card-img-top" src="http://via.placeholder.com/640x360" alt="Card image cap">
                             <div class="card-body">
                                 <p>
-                                    <a href="">{{ trick.name }}</a>
+                                    <a href="{{ path('trick', {'slug': trick.slug}) }}">{{ trick.name }}</a>
                                 </p>
                                 <p class="text-end">
                                     <a href="" class="text-dark"><i class="bi bi-pencil-fill"></i></a>
