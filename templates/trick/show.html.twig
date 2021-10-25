@@ -13,7 +13,7 @@
         {% endfor %}
         {% for video in trick.videos %}
             <div class="col-12 col-lg-2">
-                <iframe style="width:100%" src="{{ video.url }}" title="YouTube video player" frameborder="0"
+                <iframe class="w-100" src="{{ video.url }}" title="YouTube video player" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         {% endfor %}
@@ -68,12 +68,12 @@
             </div>
         </div>
     {% endfor %}
-        <div id="moreComments">
+        <div id="more">
         </div>
-        <input type="hidden" id="commentsIndex" value="5">
+        <div id="moreData" data-url="/comment/loadMore/" data-id="{{ trick.id }}" data-index="5">
         <div class="row py-5">
             <div class="col-12 text-center">
-                <button class="btn btn-primary" type="button" onclick="loadMore();">
+                <button class="btn btn-primary" type="button" id="loadMoreButton">
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     <span class="sr-only">Load more...</span>
                 </button>
@@ -83,34 +83,4 @@
     </div>
 </div>
 {% endblock %}
-{% block javascript %}
-    <script>
-        function loadMore(){
-            var index = document.getElementById('commentsIndex').value;
-            fetch("/comment/loadMore/{{ trick.id }}/"+index)
-            .then(response => response.json())
-            .then(data => {
-                for (var key in data){
-                    document.getElementById('moreComments').innerHTML += `{% include "trick/_comment_template.html.twig" %}`;
 
-                    var commentContent = document.getElementsByClassName('commentContent');
-                    commentContent[commentContent.length-1].innerHTML = data[key].content;
-
-                    var commentDates = document.getElementsByClassName('commentDate');
-                    commentDates[commentDates.length-1].innerHTML = new Date(data[key].createdAt).toLocaleDateString("fr-FR");
-
-                    var commentTimes = document.getElementsByClassName('commentTime');
-                    commentTimes[commentTimes.length-1].innerHTML = new Date(data[key].createdAt).toLocaleTimeString("fr-FR", {hour: '2-digit', minute:'2-digit'});
-
-                    var commentUsers = document.getElementsByClassName('commentUser');
-                    commentUsers[commentUsers.length-1].innerHTML = data[key].user.username;
-
-                    var commentUserPictures = document.getElementsByClassName('commentUserPicture');
-                    commentUserPictures[commentUserPictures.length-1].setAttribute('src',data[key].user.picture);
-
-                }
-                document.getElementById('commentsIndex').value = parseInt(index) * 2;
-            });
-        }
-    </script>
-{% endblock %}

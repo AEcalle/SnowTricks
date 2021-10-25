@@ -8,6 +8,7 @@ use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
+use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,5 +54,13 @@ class TrickController extends AbstractController
                 'comments' => $comments,
             ]
         );
+    }
+
+    #[Route('trick/loadMore/{index}', name: 'trickLoadMore')]
+    public function loadMore(int $index, TrickRepository $repo): Response
+    {
+        $tricks = $repo->findBy([], [], 15, $index);
+
+        return $this->render('trick/_trick_template.html.twig',['tricks' => $tricks]);
     }
 }
