@@ -21,7 +21,6 @@ class Image
     private string $filename;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'images')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Trick $trick;
 
     public function getId(): ?int

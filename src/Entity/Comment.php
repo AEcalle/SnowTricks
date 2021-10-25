@@ -30,11 +30,11 @@ class Comment
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['group1'])]
-    private ?User $user;
+    private User $user;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Trick $trick;
+    private Trick $trick;
 
     public function getId(): ?int
     {
@@ -61,22 +61,22 @@ class Comment
         $this->content = $content;
     }
 
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): void
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
-    public function getTrick(): ?Trick
+    public function getTrick(): Trick
     {
         return $this->trick;
     }
 
-    public function setTrick(?Trick $trick): void
+    public function setTrick(Trick $trick): void
     {
         $this->trick = $trick;
     }
