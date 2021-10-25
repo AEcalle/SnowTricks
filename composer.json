@@ -39,6 +39,7 @@
         "symfony/twig-bundle": "5.3.*",
         "symfony/validator": "5.3.*",
         "symfony/web-link": "5.3.*",
+        "symfony/webpack-encore-bundle": "^1.12",
         "symfony/yaml": "5.3.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
@@ -46,6 +47,7 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "fakerphp/faker": "^1.16",
+        "friendsoftwig/twigcs": "^5.1",
         "nunomaduro/phpinsights": "^2.0",
         "phpmd/phpmd": "^2.10",
         "phpstan/phpstan": "^0.12.99",
