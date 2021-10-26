@@ -17,7 +17,7 @@ final class HomeController extends AbstractController
         return $this->render(
             'home/index.html.twig',
             [
-                'tricks' => $repo->findAll(),
+                'tricks' => $repo->findBy([],[],15,0),
             ]
         );
     }

@@ -39,8 +39,8 @@
         <!-- ======= Hero Section ======= -->
         <section id="hero">
             <div class="hero-container" data-aos="fade-up">
-            <h1>Welcome to SnowTricks</h1>
-            <h2>We are a snowboard fan community</h2>
+            <h1>{% block h1 %}{% endblock %}</h1>
+            <h2>{% block slogan %}{% endblock %}</h2>
             </div>
 
             <a href="#listTrickTitle" id="goToDownButton"
@@ -79,7 +79,5 @@
             </div>
         </nav>
         <!-- End Mobile Navbar -->
-        {% block javascript %}
-        {% endblock %}
     </body>
 </html>
