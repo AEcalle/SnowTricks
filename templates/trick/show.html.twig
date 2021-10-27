@@ -8,16 +8,16 @@
     <div class="row py-5">
         {% for image in trick.images %}
             <div class="col-12 col-lg-2">
-                <img class="img-fluid w-100" src="{{ image.filename }}" alt="">
+                <img class="img-fluid w-100" src="{{ asset('build/images/' ~ image.filename) }}" alt="">
             </div>
         {% endfor %}
         {% for video in trick.videos %}
             <div class="col-12 col-lg-2">
-                <iframe class="w-100" src="{{ video.url }}" title="YouTube video player" frameborder="0"
+                <iframe class="w-100" src="{{ video.url|replace({'watch?v=':'/embed/','video':'/embed/video','vimeo.com':'player.vimeo.com/video'}) }}" title="YouTube video player" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         {% endfor %}
-    </div>
+    </div>s
     <div class="row py-5">
         <div class="col-12">
             {{ trick.description }}
@@ -70,10 +70,10 @@
     {% endfor %}
         <div id="more">
         </div>
-        <div id="moreData" data-url="/comment/loadMore/" data-id="{{ trick.id }}" data-index="5">
+        <div id="moreData" data-url="/comment/loadMore/" data-id="{{ trick.id }}" data-index="5" data-step="5">
         <div class="row py-5">
             <div class="col-12 text-center">
-                <button class="btn btn-primary" type="button" id="loadMoreButton">
+                <button class="btn btn-primary loadMoreButton" type="button">
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     <span class="sr-only">Load more...</span>
                 </button>
@@ -83,4 +83,3 @@
     </div>
 </div>
 {% endblock %}
-

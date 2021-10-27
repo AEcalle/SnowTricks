@@ -140,7 +140,7 @@ class User
     public function addTrick(Trick $trick): self
     {
         if (! $this->tricks->contains($trick)) {
-            $this->tricks[] = $trick;
+            $this->tricks->add($trick);
             $trick->setUser($this);
         }
 
@@ -151,10 +151,6 @@ class User
     {
         if ($this->tricks->contains($trick)) {
             $this->tricks->removeElement($trick);
-            // set the owning side to null (unless already changed)
-            if ($trick->getUser() === $this) {
-                $trick->setUser(null);
-            }
         }
 
         return $this;
@@ -171,7 +167,7 @@ class User
     public function addComment(Comment $comment): self
     {
         if (! $this->comments->contains($comment)) {
-            $this->comments[] = $comment;
+            $this->comments->add($comment);
             $comment->setUser($this);
         }
 
@@ -182,10 +178,6 @@ class User
     {
         if ($this->comments->contains($comment)) {
             $this->comments->removeElement($comment);
-            // set the owning side to null (unless already changed)
-            if ($comment->getUser() === $this) {
-                $comment->setUser(null);
-            }
         }
 
         return $this;
