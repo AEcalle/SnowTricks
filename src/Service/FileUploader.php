@@ -4,28 +4,33 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class FileUploader
 {
+    private SluggerInterface $slugger;
+
+    public function __construct(SluggerInterface $slugger)
+    {
+        $this->slugger = $slugger;
+    }
+
     public function createName(UploadedFile $file): string
     {
-        $extension = $file->guessExtension();
-        if (! $extension) {
-            $extension = 'bin';
-        }
+        $originalFilename = pathinfo(
+            $file->getClientOriginalName(),
+            PATHINFO_FILENAME
+        );
+        $safeFilename = $this->slugger->slug($originalFilename);
 
-        return rand(1, 99999).'.'.$extension;
+        return $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
     }
 
     public function upload(string $folder, UploadedFile $file): string
     {
-        $filesystem = new Filesystem();
-        do {
-            $fileName = $this->createName($file);
-        } while ($filesystem->exists($folder.$fileName));
+        $fileName = $this->createName($file);
 
         try {
             $file->move($folder, $fileName);
