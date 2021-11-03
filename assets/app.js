@@ -27,12 +27,13 @@ const loadMore = () => {
         }
 
         const index = moreData.dataset.index;
+        const step = moreData.dataset.step;
 
         fetch(url+id+index)
         .then(response => response.text())
         .then(data => {
             document.getElementById('more').innerHTML += data;
-            const newIndex = parseInt(index) *2;
+            const newIndex = parseInt(index) + parseInt(step);
             moreData.setAttribute('data-index', newIndex);
             const backToTopButton = document.getElementById('backToTopButton');
             if (backToTopButton !== null){
@@ -45,12 +46,70 @@ const deleteConfirmation = () => {
     return window.confirm('Comfirm you want to delete this trick.');
 }
 
-document.getElementById('loadMoreButton').addEventListener('click', loadMore);
-const deletes = document.querySelectorAll('.delete');
-deletes.forEach(function(item){
-    item.addEventListener('click', deleteConfirmation);
-}
-);
+const addFormToCollection = (e) => {
+    const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collection);
+
+    const item = document.createElement('div');
+    item.setAttribute('class','col-12 col-lg-3');
+
+    item.innerHTML = collectionHolder
+      .dataset
+      .prototype
+      .replace(
+        /__name__/g,
+        collectionHolder.dataset.index
+      );
+  
+    collectionHolder.appendChild(item);
+  
+    collectionHolder.dataset.index++;
+
+    collectionHolder
+    .querySelectorAll('.remove_item_link')
+    .forEach(btn => btn.addEventListener("click", removeFormToCollection));
+    collectionHolder
+    .querySelectorAll('input[type="file"]')
+    .forEach(input => input.addEventListener("change", imagePreview));
+    collectionHolder
+    .querySelectorAll('.video input[type="text"]')
+    .forEach(input => input.addEventListener("change", videoPreview));
+  };
+
+const removeFormToCollection = (e) => {
+    e.currentTarget.closest('.item').parentElement.remove();
+};
+
+const imagePreview = (e) => {
+    const [file] = e.currentTarget.files
+        if (file) {
+            const img = document.createElement('img');
+            img.setAttribute('src', URL.createObjectURL(file));
+            img.setAttribute('class','img-fluid w-100 my-3');
+            e.currentTarget.after(img);
+        }
+};
+
+const videoPreview = (e) => {
+    const input = e.currentTarget
+
+    const video = document.createElement('iframe');
+    video.setAttribute('src', input.value.replace('watch?v=','/embed/').replace('video','/embed/video').replace('vimeo.com','player.vimeo.com/video'));
+    video.setAttribute('class','w-100 my-3');
+    e.currentTarget.after(video);
+
+};
+
+document
+    .querySelectorAll('.loadMoreButton')
+    .forEach(btn => btn.addEventListener('click', loadMore));
+document
+    .querySelectorAll('.delete')
+    .forEach(item => item.addEventListener('click', deleteConfirmation));
+document
+    .querySelectorAll('.add_item_link')
+    .forEach(btn => btn.addEventListener("click", addFormToCollection));
+
+
 
 
 

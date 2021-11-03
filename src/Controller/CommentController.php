@@ -15,8 +15,11 @@ class CommentController extends AbstractController
     #[Route('comment/loadMore/{id}/{index}', name: 'commentLoadMore')]
     public function loadMore(Trick $trick, int $index, CommentRepository $repo): Response
     {
-        $comments = $repo->findBy(['trick' => $trick->getId()], [], 5, $index);
-
-        return $this->render('trick/_comment_template.html.twig',['comments' => $comments]);
+        return $this->render(
+            'trick/_comment_template.html.twig',
+            [
+                'comments' => $repo->findBy(['trick' => $trick->getId()], [], 5, $index),
+            ]
+        );
     }
 }

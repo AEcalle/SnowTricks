@@ -26,7 +26,6 @@ class Trick
     private string $name;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    #[Assert\NotBlank]
     private string $slug;
 
     #[ORM\Column(type: 'text')]
@@ -51,6 +50,7 @@ class Trick
      * @var Collection<int, Image>
      */
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Image::class, orphanRemoval: true, cascade: ['persist'])]
+    #[Assert\Count(min : 1)]
     private Collection $images;
 
     /**
@@ -140,7 +140,7 @@ class Trick
     public function addImage(Image $image): self
     {
         if (! $this->images->contains($image)) {
-            $this->images[] = $image;
+            $this->images->add($image);
             $image->setTrick($this);
         }
 
@@ -171,7 +171,7 @@ class Trick
     public function addVideo(Video $video): self
     {
         if (! $this->videos->contains($video)) {
-            $this->videos[] = $video;
+            $this->videos->add($video);
             $video->setTrick($this);
         }
 
