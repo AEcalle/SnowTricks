@@ -18,6 +18,8 @@ final class ImageType extends AbstractType
         $builder
             ->add('filename', FileType::class, [
                 'label' => 'Image (maxSize : 1024k)',
+                'data_class' => null,
+                'required' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '1024k',
@@ -28,7 +30,7 @@ final class ImageType extends AbstractType
                     ])
                 ],
             ])
-        ;
+            ;      
     }
 
     public function configureOptions(OptionsResolver $resolver): void

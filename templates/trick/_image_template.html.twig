@@ -1,5 +1,7 @@
 <div class="item image">
-        {{ form_row(form.filename) }}
+        {% if form.filename is not null %}
+                {{ form_row(form.filename) }}
+        {% endif %}
         <i class="bi bi-trash-fill remove_item_link"></i>
 </div>
 

@@ -66,13 +66,13 @@ const addFormToCollection = (e) => {
 
     collectionHolder
     .querySelectorAll('.remove_item_link')
-    .forEach(btn => btn.addEventListener("click", removeFormToCollection));
+    .forEach(btn => btn.addEventListener('click', removeFormToCollection));
     collectionHolder
     .querySelectorAll('input[type="file"]')
-    .forEach(input => input.addEventListener("change", imagePreview));
+    .forEach(input => input.addEventListener('change', imagePreview));
     collectionHolder
     .querySelectorAll('.video input[type="text"]')
-    .forEach(input => input.addEventListener("change", videoPreview));
+    .forEach(input => input.addEventListener('change', videoPreview));
   };
 
 const removeFormToCollection = (e) => {
@@ -80,6 +80,7 @@ const removeFormToCollection = (e) => {
 };
 
 const imagePreview = (e) => {
+    console.log(e.currentTarget.files);
     const [file] = e.currentTarget.files
         if (file) {
             const img = document.createElement('img');
@@ -107,7 +108,9 @@ document
     .forEach(item => item.addEventListener('click', deleteConfirmation));
 document
     .querySelectorAll('.add_item_link')
-    .forEach(btn => btn.addEventListener("click", addFormToCollection));
+    .forEach(btn => btn.addEventListener('click', addFormToCollection));
+
+
 
 
 

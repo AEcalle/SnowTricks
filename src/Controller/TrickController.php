@@ -13,6 +13,8 @@ use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
 use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,6 +53,54 @@ class TrickController extends AbstractController
         return $this->renderForm('trick/create.html.twig', [
             'form' => $form,
         ]);
+    }
+
+    #[Route('trick-update/{id}', name: 'trickUpdate')]
+    public function update(Trick $trick, Request $request, 
+    SluggerInterface $slugger, FileUploader $fileUploader, 
+    UserRepository $repo_u): Response
+    {
+
+        $form = $this->createForm(TrickType::class, $trick)->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $trick->setSlug($slugger->slug($trick->getName())->toString());
+            //TODO : Change this with connected User
+            $trick->setUser($repo_u->findBy([], [], 1, 0)[0]);
+
+            foreach ($form['images'] as $image) {
+                $file = $fileUploader->upload(
+                    'build/images/',
+                    $image['filename']->getData()
+                );
+                $image->getData('image')->setFileName($file);
+            }
+
+            $this->getDoctrine()->getManager()->persist($trick);
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('notice', 'Trick saved !');
+
+            return $this->redirectToRoute('trickUpdate',['id' => $trick->getId()]);
+        }
+
+        return $this->renderForm('trick/update.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('trick-delete/{id}', name: 'trickDelete')]
+    public function delete(Trick $trick, Filesystem $filesystem): Response
+    {
+        foreach ($trick->getImages() as $image) {
+            $filesystem->remove('build/images/'.$image->getFilename());
+        }
+
+        $this->getDoctrine()->getManager()->remove($trick);
+        $this->getDoctrine()->getManager()->flush();
+
+        $this->addFlash('notice', 'Trick deleted !');
+        return $this->redirectToRoute('home');
     }
 
     #[Route('/trick/{slug}', name: 'trick')]

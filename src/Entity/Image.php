@@ -18,7 +18,7 @@ class Image
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
-    private string $filename;
+    private ?string $filename;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'images')]
     private ?Trick $trick;
@@ -28,12 +28,12 @@ class Image
         return $this->id;
     }
 
-    public function getFilename(): string
+    public function getFilename(): ?string
     {
         return $this->filename;
     }
 
-    public function setFilename(string $filename): void
+    public function setFilename(?string $filename): void
     {
         $this->filename = $filename;
     }
