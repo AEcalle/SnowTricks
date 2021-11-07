@@ -34,12 +34,14 @@ class TrickController extends AbstractController
             //TODO : Change this with connected User
             $trick->setUser($repo_u->findBy([], [], 1, 0)[0]);
 
-            foreach ($form['images'] as $image) {
-                $file = $fileUploader->upload(
-                    'build/images/',
-                    $image['filename']->getData()
-                );
-                $image->getData('image')->setFileName($file);
+            foreach ($trick->getImages() as $image) {
+                if (null !== $image->getFile()) {
+                    $fileName = $fileUploader->upload(
+                        'build/images/',
+                        $image->getFile()
+                    );
+                    $image->setFileName($fileName);
+                }
             }
 
             $this->getDoctrine()->getManager()->persist($trick);
@@ -68,12 +70,14 @@ class TrickController extends AbstractController
             //TODO : Change this with connected User
             $trick->setUser($repo_u->findBy([], [], 1, 0)[0]);
 
-            foreach ($form['images'] as $image) {
-                $file = $fileUploader->upload(
-                    'build/images/',
-                    $image['filename']->getData()
-                );
-                $image->getData('image')->setFileName($file);
+            foreach ($trick->getImages() as $image) {
+                if (null !== $image->getFile()) {
+                   $fileName = $fileUploader->upload(
+                        'build/images/',
+                        $image->getFile()
+                    );
+                    $image->setFilename($fileName);
+                }
             }
 
             $this->getDoctrine()->getManager()->persist($trick);
