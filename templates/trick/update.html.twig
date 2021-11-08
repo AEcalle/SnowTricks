@@ -7,11 +7,6 @@
 <div class="container">
     <div class="row py-5" id="top">
         <div class="col-12">
-                {% for message in app.flashes('notice') %}
-                    <div class="text-success">
-                        {{ message }}
-                    </div>
-                {% endfor %}
             {{ form_start(form) }}
                 {{ form_errors(form) }}
                 {{ form_widget(form._token) }}

@@ -7,18 +7,10 @@
 {% block body %}
     <section id="services" class="services">
         <div class="container">
-
             <div class="section-title" id="listTrickTitle" data-aos="fade-in" data-aos-delay="100">
                 <h2>Tricks</h2>
             </div>
             <div class="row justify-content-center">
-                <div class="col-12">
-                    {% for message in app.flashes('notice') %}
-                        <div class="text-success">
-                                {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
             </div>
             {% for trick in tricks %}
                 {% if loop.first or (loop.index - 1) % 5 == 0 %}

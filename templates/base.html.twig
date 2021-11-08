@@ -51,6 +51,11 @@
 
         </section><!-- End Hero -->
         <main id="main">
+        {% for message in app.flashes('notice') %}
+        <div class="text-success">
+                {{ message }}
+        </div>
+        {% endfor %}
         {% block body %}{% endblock %}
         </main>
           <!-- ======= Footer ======= -->
