@@ -26,8 +26,7 @@ final class ImageType extends AbstractType
             }
 
             if (null !== $image->getId()) {
-                $form
-                    ->remove('file');
+                $form->remove('file');
             }
         };
 
@@ -36,7 +35,6 @@ final class ImageType extends AbstractType
             ->add('file',FileType::class, [
                 'label' => 'Image (maxSize : 1024k)',
                 'required' => false,
-                'data_class' => null,
                 'constraints' => [
                     new File([
                         'maxSize' => '1024k',

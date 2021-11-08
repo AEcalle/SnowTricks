@@ -24,7 +24,6 @@ class Image
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'images')]
     private ?Trick $trick;
 
-    #[Assert\Image]
     private ?UploadedFile $file = null;
 
     public function getId(): ?int
