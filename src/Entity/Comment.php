@@ -16,7 +16,7 @@ class Comment
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[Groups(['group1'])]
-    private int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Groups(['group1'])]
