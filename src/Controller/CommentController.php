@@ -13,12 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class CommentController extends AbstractController
 {
     #[Route('comment/loadMore/{id}/{index}', name: 'commentLoadMore')]
-    public function loadMore(Trick $trick, int $index, CommentRepository $repo): Response
+    public function loadMore(Trick $trick, int $index, CommentRepository $commentRepository): Response
     {
         return $this->render(
             'trick/_comment_template.html.twig',
             [
-                'comments' => $repo->findBy(['trick' => $trick->getId()], [], 5, $index),
+                'comments' => $commentRepository->findBy(['trick' => $trick->getId()], [], 5, $index),
             ]
         );
     }
