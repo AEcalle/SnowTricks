@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
@@ -14,7 +15,7 @@ class Image
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private int $id;
+    private ?int $id = null;    
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
@@ -22,6 +23,8 @@ class Image
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'images')]
     private ?Trick $trick;
+
+    private ?UploadedFile $file = null;
 
     public function getId(): ?int
     {
@@ -46,5 +49,15 @@ class Image
     public function setTrick(?Trick $trick): void
     {
         $this->trick = $trick;
+    }
+
+    public function getFile(): ?UploadedFile
+    {
+        return $this->file;
+    }
+
+    public function setFile(?UploadedFile $file): void
+    {
+        $this->file = $file;
     }
 }

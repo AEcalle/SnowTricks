@@ -13,6 +13,8 @@ use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
 use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,7 +23,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class TrickController extends AbstractController
 {
     #[Route('trick-create', name: 'trickCreate')]
-    public function create(Request $request, SluggerInterface $slugger, FileUploader $fileUploader, UserRepository $repo_u): Response
+    public function create(Request $request, SluggerInterface $slugger, FileUploader $fileUploader, UserRepository $userRepository): Response
     {
         $trick = new Trick();
 
@@ -30,14 +32,16 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $trick->setSlug($slugger->slug($trick->getName())->toString());
             //TODO : Change this with connected User
-            $trick->setUser($repo_u->findBy([], [], 1, 0)[0]);
+            $trick->setUser($userRepository->findBy([], [], 1, 0)[0]);
 
-            foreach ($form['images'] as $image) {
-                $file = $fileUploader->upload(
-                    'build/images/',
-                    $image['filename']->getData()
-                );
-                $image->getData('image')->setFileName($file);
+            foreach ($trick->getImages() as $image) {
+                if (null !== $image->getFile()) {
+                    $fileName = $fileUploader->upload(
+                        'build/images/',
+                        $image->getFile()
+                    );
+                    $image->setFileName($fileName);
+                }
             }
 
             $this->getDoctrine()->getManager()->persist($trick);
@@ -53,8 +57,58 @@ class TrickController extends AbstractController
         ]);
     }
 
+    #[Route('trick-update/{id}', name: 'trickUpdate')]
+    public function update(Trick $trick, Request $request, 
+    SluggerInterface $slugger, FileUploader $fileUploader, 
+    UserRepository $userRepository): Response
+    {
+
+        $form = $this->createForm(TrickType::class, $trick)->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $trick->setSlug($slugger->slug($trick->getName())->toString());
+            //TODO : Change this with connected User
+            $trick->setUser($userRepository->findBy([], [], 1, 0)[0]);
+
+            foreach ($trick->getImages() as $image) {
+                if (null !== $image->getFile()) {
+                   $fileName = $fileUploader->upload(
+                        'build/images/',
+                        $image->getFile()
+                    );
+                    $image->setFilename($fileName);
+                }
+            }
+
+            $this->getDoctrine()->getManager()->persist($trick);
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('notice', 'Trick saved !');
+
+            return $this->redirectToRoute('trickUpdate',['id' => $trick->getId()]);
+        }
+
+        return $this->renderForm('trick/update.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('trick-delete/{id}', name: 'trickDelete')]
+    public function delete(Trick $trick, Filesystem $filesystem): Response
+    {
+        foreach ($trick->getImages() as $image) {
+            $filesystem->remove('build/images/'.$image->getFilename());
+        }
+
+        $this->getDoctrine()->getManager()->remove($trick);
+        $this->getDoctrine()->getManager()->flush();
+
+        $this->addFlash('notice', 'Trick deleted !');
+        return $this->redirectToRoute('home');
+    }
+
     #[Route('/trick/{slug}', name: 'trick')]
-    public function show(Trick $trick, Request $request, CommentRepository $repo_c, UserRepository $repo_u): Response
+    public function show(Trick $trick, Request $request, CommentRepository $commentRepository, UserRepository $userRepository): Response
     {
         $comment = new Comment();
 
@@ -64,7 +118,7 @@ class TrickController extends AbstractController
             $comment->setCreatedAt(new \DateTimeImmutable());
             $comment->setTrick($trick);
             //TODO : Change this with connected User
-            $comment->setUser($repo_u->findBy([], [], 1, 0)[0]);
+            $comment->setUser($userRepository->findBy([], [], 1, 0)[0]);
 
             $this->getDoctrine()->getManager()->persist($comment);
             $this->getDoctrine()->getManager()->flush();
@@ -85,7 +139,7 @@ class TrickController extends AbstractController
             [
                 'trick' => $trick,
                 'form' => $form,
-                'comments' => $repo_c->findBy(['trick' => $trick->getId()], [], 5, 0),
+                'comments' => $commentRepository->findBy(['trick' => $trick->getId()], [], 5, 0),
             ]
         );
     }

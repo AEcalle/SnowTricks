@@ -66,20 +66,25 @@ const addFormToCollection = (e) => {
 
     collectionHolder
     .querySelectorAll('.remove_item_link')
-    .forEach(btn => btn.addEventListener("click", removeFormToCollection));
+    .forEach(btn => btn.addEventListener('click', removeFormToCollection));
     collectionHolder
     .querySelectorAll('input[type="file"]')
-    .forEach(input => input.addEventListener("change", imagePreview));
+    .forEach(input => input.addEventListener('change', imagePreview));
     collectionHolder
     .querySelectorAll('.video input[type="text"]')
-    .forEach(input => input.addEventListener("change", videoPreview));
+    .forEach(input => input.addEventListener('change', videoPreview));
   };
 
 const removeFormToCollection = (e) => {
     e.currentTarget.closest('.item').parentElement.remove();
 };
 
+const removeImageLink = (e) => {
+    e.currentTarget.closest('.item').remove();
+};
+
 const imagePreview = (e) => {
+    console.log(e.currentTarget.files);
     const [file] = e.currentTarget.files
         if (file) {
             const img = document.createElement('img');
@@ -107,7 +112,19 @@ document
     .forEach(item => item.addEventListener('click', deleteConfirmation));
 document
     .querySelectorAll('.add_item_link')
-    .forEach(btn => btn.addEventListener("click", addFormToCollection));
+    .forEach(btn => btn.addEventListener('click', addFormToCollection));
+document
+    .querySelectorAll('.remove_image_link')
+    .forEach(btn => btn.addEventListener('click', removeImageLink));
+
+const hiddenImages = document.querySelectorAll('.image input[type="hidden"]');
+const length = hiddenImages.length;
+for (let i = 0; i<length ; i++) {
+    const img = document.createElement('img');
+    img.setAttribute('src','../build/images/'+hiddenImages[i].value);
+    img.setAttribute('class','img-fluid w-100 my-3');
+    hiddenImages[i].after(img);
+}
 
 
 

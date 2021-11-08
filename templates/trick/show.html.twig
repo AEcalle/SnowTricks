@@ -13,11 +13,11 @@
         {% endfor %}
         {% for video in trick.videos %}
             <div class="col-12 col-lg-2">
-                <iframe class="w-100" src="{{ video.url|replace({'watch?v=':'/embed/','video':'/embed/video','vimeo.com':'player.vimeo.com/video'}) }}" title="YouTube video player" frameborder="0"
+                <iframe class="w-100" src="{{ video.url|replace({'watch?v=': '/embed/', 'video': '/embed/video', 'vimeo.com': 'player.vimeo.com/video'}) }}" title="YouTube video player" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         {% endfor %}
-    </div>s
+    </div>
     <div class="row py-5">
         <div class="col-12">
             {{ trick.description }}

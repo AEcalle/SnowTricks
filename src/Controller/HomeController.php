@@ -12,12 +12,12 @@ use Symfony\Component\Routing\Annotation\Route;
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function index(TrickRepository $repo): Response
+    public function index(TrickRepository $trickRepository): Response
     {
         return $this->render(
             'home/index.html.twig',
             [
-                'tricks' => $repo->findBy([], ['name' => 'ASC'], 15, 0),
+                'tricks' => $trickRepository->findBy([], ['name' => 'ASC'], 15, 0),
             ]
         );
     }
