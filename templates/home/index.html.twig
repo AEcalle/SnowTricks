@@ -23,10 +23,12 @@
                                 <p>
                                     <a href="{{ path('trick', {'slug': trick.slug}) }}">{{ trick.name }}</a>
                                 </p>
-                                <p class="text-end">
-                                    <a href="{{ path('trickUpdate', {'id': trick.id}) }}" class="text-dark"><i class="bi bi-pencil-fill"></i></a>
-                                    <a href="{{ path('trickDelete', {'id': trick.id}) }}" class="text-dark ms-3 delete"><i class="bi bi-trash-fill"></i></a>
-                                </p>
+                                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                    <p class="text-end">
+                                        <a href="{{ path('trickUpdate', {'id': trick.id}) }}" class="text-dark"><i class="bi bi-pencil-fill"></i></a>
+                                        <a href="{{ path('trickDelete', {'id': trick.id}) }}" class="text-dark ms-3 delete"><i class="bi bi-trash-fill"></i></a>
+                                    </p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

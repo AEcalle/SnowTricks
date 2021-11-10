@@ -28,8 +28,12 @@
             <ul>
                 <li><a class="nav-link active" href="{{ path('home') }}">Home</a></li>
                 <li><a class="nav-link scrollto" href="#listTrickTitle">Tricks</a></li>
-                <li><a class="nav-link" href="#">Sign in</a></li>
-                <li><a class="nav-link" href="#">Sing up</a></li>
+                {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <li><a class="nav-link" href="{{ path('login') }}">Sign in</a></li>
+                    <li><a class="nav-link" href="{{ path('app_register') }}">Sing up</a></li>
+                {% else %}
+                    <li><a class="nav-link" href="{{ path('logout') }}">Sign out</a></li>
+                {% endif %}
             </ul>
             <!--<i class="bi bi-list mobile-nav-toggle"></i>-->
             </nav><!-- .navbar -->
