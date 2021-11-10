@@ -30,7 +30,7 @@ final class MailerSender
         $this->mailer->send($email);
     }
 
-    public function sendEmailResetPassword(User $user)
+    public function sendEmailResetPassword(User $user): void
     {
         $email = (new TemplatedEmail())
             ->from('contact@snowtricks.com')

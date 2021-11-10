@@ -35,7 +35,6 @@ class TaskVoter extends Voter
         switch ($attribute) {
             case self::DELETE:
                 return $user === $subject;
-                break;
         }
 
         return false;

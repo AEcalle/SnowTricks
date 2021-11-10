@@ -42,7 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private string $token;
+    private ?string $token;
 
     /**
      * @var array<int, string> $roles
@@ -128,7 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->token;
     }
 
-    public function setToken(string $token): void
+    public function setToken(?string $token): void
     {
         $this->token = $token;
     }

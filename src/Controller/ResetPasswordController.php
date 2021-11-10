@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\ForgottenPasswordType;
+use App\Form\ResetPassWordType;
 use App\Repository\UserRepository;
 use App\Service\MailerSender;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,7 +47,7 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('login');
         }
 
-        $form = $this->createForm(ResetPasswordType::class)->handleRequest($request);
+        $form = $this->createForm(ResetPassWordType::class)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
