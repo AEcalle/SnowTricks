@@ -1,6 +1,7 @@
 <?php 
 namespace App\Service;
 
+use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 
@@ -20,6 +21,22 @@ final class MailerSender
             ->to($user->getEmail())
             ->subject('SnowTricks - Verify your email')
             ->htmlTemplate('emails/signup.html.twig')
+            ->context([
+                'id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'token' => $user->getToken(),
+            ])
+        ;
+        $this->mailer->send($email);
+    }
+
+    public function sendEmailResetPassword(User $user)
+    {
+        $email = (new TemplatedEmail())
+            ->from('contact@snowtricks.com')
+            ->to($user->getEmail())
+            ->subject('SnowTricks - Reset your passwords')
+            ->htmlTemplate('emails/reset_password.html.twig')
             ->context([
                 'id' => $user->getId(),
                 'username' => $user->getUsername(),
