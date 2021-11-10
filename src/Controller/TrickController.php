@@ -14,7 +14,6 @@ use App\Repository\UserRepository;
 use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -96,6 +95,8 @@ class TrickController extends AbstractController
     #[Route('trick-delete/{id}', name: 'trickDelete')]
     public function delete(Trick $trick, Filesystem $filesystem): Response
     {
+        $this->denyAccessUnlessGranted('delete', $trick);
+
         foreach ($trick->getImages() as $image) {
             $filesystem->remove('build/images/'.$image->getFilename());
         }
