@@ -1,4 +1,7 @@
-<?php 
+<?php
+
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\User;
@@ -13,11 +16,11 @@ final class MailerSender
     {
         $this->mailer = $mailer;
     }
-    
+
     public function sendEmailValidation(User $user): void
     {
         $email = (new TemplatedEmail())
-            ->from('contact@snowtricks.com')
+            ->from('contact@aurelienecalle.fr')
             ->to($user->getEmail())
             ->subject('SnowTricks - Verify your email')
             ->htmlTemplate('emails/signup.html.twig')
@@ -33,7 +36,7 @@ final class MailerSender
     public function sendEmailResetPassword(User $user): void
     {
         $email = (new TemplatedEmail())
-            ->from('contact@snowtricks.com')
+            ->from('contact@aurelienecalle.fr')
             ->to($user->getEmail())
             ->subject('SnowTricks - Reset your passwords')
             ->htmlTemplate('emails/reset_password.html.twig')

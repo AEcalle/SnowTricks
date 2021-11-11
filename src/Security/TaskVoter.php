@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use App\Entity\Trick;
@@ -7,10 +9,10 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class TaskVoter extends Voter
+final class TaskVoter extends Voter
 {
-    const DELETE = 'delete';
-    
+    public const DELETE = 'delete';
+
     protected function supports(string $attribute, $subject): bool
     {
         if (! in_array($attribute, [self::DELETE])) {
@@ -24,17 +26,17 @@ class TaskVoter extends Voter
         return true;
     }
 
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute(string $attribute, $trick, TokenInterface $token): bool
     {
         $user = $token->getUser();
 
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             return false;
         }
 
         switch ($attribute) {
             case self::DELETE:
-                return $user === $subject;
+                return $user === $trick->getUser();
         }
 
         return false;

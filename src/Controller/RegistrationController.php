@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -14,8 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, 
-    UserPasswordHasherInterface $userPasswordHasherInterface, MailerSender $mailerSender): Response
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasherInterface, 
+        MailerSender $mailerSender
+    ): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -29,15 +34,15 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            $user->setToken(uniqid((string) rand(), true));
+            $user->setToken(str_replace('.', '', uniqid((string) rand(), true)));
 
             $this->getDoctrine()->getManager()->persist($user);
             $this->getDoctrine()->getManager()->flush();
             $mailerSender->sendEmailValidation($user);
 
-            $this->addFlash('notice','An email with a link to activate your account
+            $this->addFlash('notice', 'An email with a link to activate your account
             has been sent to '.$user->getEmail().'.');
-            
+
             return $this->redirectToRoute('login');
         }
 
@@ -50,7 +55,8 @@ class RegistrationController extends AbstractController
     public function validation(User $user, string $token): Response
     {
         if ($user->getToken() !== $token) {
-            $this->addFlash('notice','This link is not valid');
+            $this->addFlash('notice', 'This link is not valid');
+
             return $this->redirectToRoute('app_register');
         }
         $user->setToken(null);
@@ -58,7 +64,8 @@ class RegistrationController extends AbstractController
         $this->getDoctrine()->getManager()->persist($user);
         $this->getDoctrine()->getManager()->flush();
 
-        $this->addFlash('notice','Your account is activated.');
+        $this->addFlash('notice', 'Your account is activated.');
+
         return $this->redirectToRoute('login');
     }
 }

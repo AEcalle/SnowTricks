@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -21,17 +23,21 @@ class ResetPasswordController extends AbstractController
         $form = $this->createForm(ForgottenPasswordType::class)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $user = $userRepository->findOneBy(['username' => $form->get('username')->getData()]);
 
             if (! $user) {
                 $this->addFlash('notice', 'Unknown username.');
-                return $this->redirectToRoute('forgottenPassword');
+
+                return $this->redirectToRoute('forgotten_password');
             }
-            $user->setToken(uniqid((string) rand(), true));
+            $user->setToken(str_replace('.', '', uniqid((string) rand(), true)));
+            $this->getDoctrine()->getManager()->persist($user);
+            $this->getDoctrine()->getManager()->flush();
+
             $mailerSender->sendEmailResetPassword($user);
             $this->addFlash('notice', 'An email has been sent. Please click on the link in the email.');
-            return $this->redirectToRoute('forgottenPassword');
+
+            return $this->redirectToRoute('forgotten_password');
         }
 
         return $this->renderForm('reset_password/forgot.html.twig', [
@@ -43,7 +49,8 @@ class ResetPasswordController extends AbstractController
     public function reset(User $user, string $token, Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
         if ($user->getToken() !== $token) {
-            $this->addFlash('notice','This link is not valid');
+            $this->addFlash('notice', 'This link is not valid');
+
             return $this->redirectToRoute('login');
         }
 
@@ -61,8 +68,8 @@ class ResetPasswordController extends AbstractController
             $this->getDoctrine()->getManager()->persist($user);
             $this->getDoctrine()->getManager()->flush();
 
-            $this->addFlash('notice','Your password has been updated');
-            
+            $this->addFlash('notice', 'Your password has been updated');
+
             return $this->redirectToRoute('home');
         }
 
