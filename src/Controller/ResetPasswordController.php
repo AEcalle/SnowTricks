@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 class ResetPasswordController extends AbstractController
 {
@@ -30,7 +31,7 @@ class ResetPasswordController extends AbstractController
 
                 return $this->redirectToRoute('forgotten_password');
             }
-            $user->setToken(str_replace('.', '', uniqid((string) rand(), true)));
+            $user->setToken(Uuid::v4());
             $this->getDoctrine()->getManager()->persist($user);
             $this->getDoctrine()->getManager()->flush();
 

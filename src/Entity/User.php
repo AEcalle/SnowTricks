@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -40,8 +41,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private ?string $token;
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $token;
 
     /**
      * @var array<int, string> $roles
@@ -122,12 +123,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = $createdAt;
     }
 
-    public function getToken(): ?string
+    public function getToken(): ?Uuid
     {
         return $this->token;
     }
 
-    public function setToken(?string $token): void
+    public function setToken(?Uuid $token): void
     {
         $this->token = $token;
     }

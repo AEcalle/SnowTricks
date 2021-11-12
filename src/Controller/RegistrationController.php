@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 class RegistrationController extends AbstractController
 {
@@ -34,7 +35,7 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            $user->setToken(str_replace('.', '', uniqid((string) rand(), true)));
+            $user->setToken(Uuid::v4());
 
             $this->getDoctrine()->getManager()->persist($user);
             $this->getDoctrine()->getManager()->flush();
@@ -51,14 +52,9 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/validation/{id}/{token}', name: 'registration_validation')]
-    public function validation(User $user, string $token): Response
+    #[Route('/validation/{token}', name: 'registration_validation')]
+    public function validation(User $user): Response
     {
-        if ($user->getToken() !== $token) {
-            $this->addFlash('notice', 'This link is not valid');
-
-            return $this->redirectToRoute('app_register');
-        }
         $user->setToken(null);
         $user->setCreatedAt(new \DateTimeImmutable());
         $this->getDoctrine()->getManager()->persist($user);
