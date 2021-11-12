@@ -34,11 +34,6 @@ final class TaskVoter extends Voter
             return false;
         }
 
-        switch ($attribute) {
-            case self::DELETE:
-                return $user === $trick->getUser();
-        }
-
-        return false;
+        return $user === $trick->getUser();
     }
 }
