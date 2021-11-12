@@ -95,11 +95,10 @@ class TrickController extends AbstractController
         ]);
     }
 
+    #[IsGranted("delete", subject: "trick")]
     #[Route('trick-delete/{id}', name: 'trickDelete')]
     public function delete(Trick $trick, Filesystem $filesystem): Response
     {
-        $this->denyAccessUnlessGranted('delete', $trick);
-
         foreach ($trick->getImages() as $image) {
             $filesystem->remove('build/images/'.$image->getFilename());
         }
