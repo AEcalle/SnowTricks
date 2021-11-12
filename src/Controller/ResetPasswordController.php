@@ -45,15 +45,9 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-    #[Route('/reset-password/{id}/{token}', name: 'reset_password')]
-    public function reset(User $user, string $token, Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
+    #[Route('/reset-password/{token}', name: 'reset_password')]
+    public function reset(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
-        if ($user->getToken() !== $token) {
-            $this->addFlash('notice', 'This link is not valid');
-
-            return $this->redirectToRoute('login');
-        }
-
         $form = $this->createForm(ResetPassWordType::class)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
