@@ -22,8 +22,9 @@ final class UserFixtures extends Fixture
             $user->setEmail($faker->email());
             $user->setPassword($faker->password());
             $user->setPicture($faker->imageUrl(100, 100, 'profile'));
-            $user->setIsVerified(true);
-            $user->setToken($faker->word());
+            $user->setCreatedAt(null);
+            $user->setRegistrationToken(null);
+            $user->setNewPasswordToken(null);
 
             $manager->persist($user);
             $this->addReference(User::class.'_'.$i, $user);

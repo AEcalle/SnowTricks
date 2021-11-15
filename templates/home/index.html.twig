@@ -21,7 +21,7 @@
                             <img class="card-img-top" src="http://via.placeholder.com/640x360" alt="Card image cap">
                             <div class="card-body">
                                 <p>
-                                    <a href="{{ path('trick', {'slug': trick.slug}) }}">{{ trick.name }}</a>
+                                    <a class="trickNameLink" href="{{ path('trick', {'slug': trick.slug}) }}">{{ trick.name }}</a>
                                 </p>
                                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                                     <p class="text-end">
