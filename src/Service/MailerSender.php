@@ -27,7 +27,7 @@ final class MailerSender
             ->context([
                 'id' => $user->getId(),
                 'username' => $user->getUsername(),
-                'token' => $user->getToken(),
+                'token' => $user->getRegistrationToken(),
             ])
         ;
         $this->mailer->send($email);
@@ -43,7 +43,7 @@ final class MailerSender
             ->context([
                 'id' => $user->getId(),
                 'username' => $user->getUsername(),
-                'token' => $user->getToken(),
+                'token' => $user->getNewPasswordToken(),
             ])
         ;
         $this->mailer->send($email);

@@ -35,7 +35,7 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            $user->setToken(Uuid::v4());
+            $user->setRegistrationToken(Uuid::v4());
 
             $this->getDoctrine()->getManager()->persist($user);
             $this->getDoctrine()->getManager()->flush();
@@ -52,10 +52,10 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/validation/{token}', name: 'registration_validation')]
+    #[Route('/validation/{registrationToken}', name: 'registration_validation')]
     public function validation(User $user): Response
     {
-        $user->setToken(null);
+        $user->setRegistrationToken(null);
         $user->setCreatedAt(new \DateTimeImmutable());
         $this->getDoctrine()->getManager()->persist($user);
         $this->getDoctrine()->getManager()->flush();

@@ -41,8 +41,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'uuid')]
-    private ?Uuid $token;
+    #[ORM\Column(type: 'uuid', nullable: true)]
+    private ?Uuid $registrationToken;
+
+    #[ORM\Column(type: 'uuid', nullable: true)]
+    private ?Uuid $newPasswordToken;
 
     /**
      * @var array<int, string> $roles
@@ -123,14 +126,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = $createdAt;
     }
 
-    public function getToken(): ?Uuid
+    public function getRegistrationToken(): ?Uuid
     {
-        return $this->token;
+        return $this->registrationToken;
     }
 
-    public function setToken(?Uuid $token): void
+    public function setRegistrationToken(?Uuid $registrationToken): void
     {
-        $this->token = $token;
+        $this->registrationToken = $registrationToken;
+    }
+
+    public function getNewPasswordToken(): ?Uuid
+    {
+        return $this->newPasswordToken;
+    }
+
+    public function setNewPasswordToken(?Uuid $newPasswordToken): void
+    {
+        $this->newPasswordToken = $newPasswordToken;
     }
 
     /**

@@ -31,7 +31,7 @@ class ResetPasswordController extends AbstractController
 
                 return $this->redirectToRoute('forgotten_password');
             }
-            $user->setToken(Uuid::v4());
+            $user->setNewPasswordToken(Uuid::v4());
             $this->getDoctrine()->getManager()->persist($user);
             $this->getDoctrine()->getManager()->flush();
 
@@ -46,7 +46,7 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-    #[Route('/reset-password/{token}', name: 'reset_password')]
+    #[Route('/reset-password/{newPasswordToken}', name: 'reset_password')]
     public function reset(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
         $form = $this->createForm(ResetPassWordType::class)->handleRequest($request);
@@ -58,7 +58,7 @@ class ResetPasswordController extends AbstractController
                         $form->get('password')->getData()
                     )
                 );
-            $user->setToken(null);
+            $user->setNewPasswordToken(null);
 
             $this->getDoctrine()->getManager()->persist($user);
             $this->getDoctrine()->getManager()->flush();
