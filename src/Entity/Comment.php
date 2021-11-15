@@ -6,7 +6,6 @@ namespace App\Entity;
 
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
@@ -15,21 +14,17 @@ class Comment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['group1'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Groups(['group1'])]
     private ?\DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank]
-    #[Groups(['group1'])]
     private string $content;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['group1'])]
     private User $user;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'comments')]

@@ -9,21 +9,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity('email')]
-class User
+#[UniqueEntity('username')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, unique:true)]
     #[Assert\NotBlank]
-    #[Groups(['group1'])]
     private string $username;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -32,19 +33,25 @@ class User
     private string $email;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank]
     private string $password;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['group1'])]
-    private string $picture;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $picture;
 
-    #[ORM\Column(type: 'boolean')]
-    #[Assert\NotBlank]
-    private bool $isVerified;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $token;
+    #[ORM\Column(type: 'uuid', nullable: true)]
+    private ?Uuid $registrationToken;
+
+    #[ORM\Column(type: 'uuid', nullable: true)]
+    private ?Uuid $newPasswordToken;
+
+    /**
+     * @var array<int, string> $roles
+     */
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
 
     /**
      * @var Collection<int, Trick>
@@ -99,34 +106,44 @@ class User
         $this->password = $password;
     }
 
-    public function getPicture(): string
+    public function getPicture(): ?string
     {
         return $this->picture;
     }
 
-    public function setPicture(string $picture): void
+    public function setPicture(?string $picture): void
     {
         $this->picture = $picture;
     }
 
-    public function getIsVerified(): ?bool
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->isVerified;
+        return $this->createdAt;
     }
 
-    public function setIsVerified(bool $isVerified): void
+    public function setCreatedAt(\DateTimeImmutable $createdAt): void
     {
-        $this->isVerified = $isVerified;
+        $this->createdAt = $createdAt;
     }
 
-    public function getToken(): ?string
+    public function getRegistrationToken(): ?Uuid
     {
-        return $this->token;
+        return $this->registrationToken;
     }
 
-    public function setToken(string $token): void
+    public function setRegistrationToken(?Uuid $registrationToken): void
     {
-        $this->token = $token;
+        $this->registrationToken = $registrationToken;
+    }
+
+    public function getNewPasswordToken(): ?Uuid
+    {
+        return $this->newPasswordToken;
+    }
+
+    public function setNewPasswordToken(?Uuid $newPasswordToken): void
+    {
+        $this->newPasswordToken = $newPasswordToken;
     }
 
     /**
@@ -181,5 +198,43 @@ class User
         }
 
         return $this;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->username;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param array<int, string> $roles
+     */
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }

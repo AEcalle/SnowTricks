@@ -12,9 +12,9 @@ use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
 use App\Service\FileUploader;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,6 +25,8 @@ class TrickController extends AbstractController
     #[Route('trick-create', name: 'trickCreate')]
     public function create(Request $request, SluggerInterface $slugger, FileUploader $fileUploader, UserRepository $userRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $trick = new Trick();
 
         $form = $this->createForm(TrickType::class, $trick)->handleRequest($request);
@@ -58,10 +60,11 @@ class TrickController extends AbstractController
     }
 
     #[Route('trick-update/{id}', name: 'trickUpdate')]
-    public function update(Trick $trick, Request $request, 
-    SluggerInterface $slugger, FileUploader $fileUploader, 
+    public function update(Trick $trick, Request $request,
+    SluggerInterface $slugger, FileUploader $fileUploader,
     UserRepository $userRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $form = $this->createForm(TrickType::class, $trick)->handleRequest($request);
 
@@ -72,7 +75,7 @@ class TrickController extends AbstractController
 
             foreach ($trick->getImages() as $image) {
                 if (null !== $image->getFile()) {
-                   $fileName = $fileUploader->upload(
+                    $fileName = $fileUploader->upload(
                         'build/images/',
                         $image->getFile()
                     );
@@ -85,7 +88,7 @@ class TrickController extends AbstractController
 
             $this->addFlash('notice', 'Trick saved !');
 
-            return $this->redirectToRoute('trickUpdate',['id' => $trick->getId()]);
+            return $this->redirectToRoute('trickUpdate', ['id' => $trick->getId()]);
         }
 
         return $this->renderForm('trick/update.html.twig', [
@@ -93,6 +96,7 @@ class TrickController extends AbstractController
         ]);
     }
 
+    #[IsGranted("delete", subject: "trick")]
     #[Route('trick-delete/{id}', name: 'trickDelete')]
     public function delete(Trick $trick, Filesystem $filesystem): Response
     {
@@ -104,6 +108,7 @@ class TrickController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
 
         $this->addFlash('notice', 'Trick deleted !');
+
         return $this->redirectToRoute('home');
     }
 

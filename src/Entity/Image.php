@@ -15,7 +15,7 @@ class Image
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id = null;    
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]

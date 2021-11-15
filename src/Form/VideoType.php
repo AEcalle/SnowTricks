@@ -15,7 +15,7 @@ final class VideoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('url', TextType::class,[
+            ->add('url', TextType::class, [
                 'label' => 'Video URL form Youtube, Dailymotion or Vimeo',
             ])
         ;

@@ -1,0 +1,6 @@
+<h1>Welcome {{ username }}!</h1>
+
+<p>
+    <a href="{{ absolute_url(path('registration_validation', 
+    {'registrationToken' : token })) }}">Click here to activate your account</a>
+</p>

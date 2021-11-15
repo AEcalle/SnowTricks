@@ -18,7 +18,7 @@ final class ImageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $listener = function (PreSetDataEvent $event) {
+        $listener = function (PreSetDataEvent $event): void {
             $image = $event->getData();
             $form = $event->getForm();
             if (! $image) {
@@ -32,7 +32,7 @@ final class ImageType extends AbstractType
 
         $builder
             ->add('filename', HiddenType::class)
-            ->add('file',FileType::class, [
+            ->add('file', FileType::class, [
                 'label' => 'Image (maxSize : 1024k)',
                 'required' => false,
                 'constraints' => [
@@ -42,11 +42,11 @@ final class ImageType extends AbstractType
                             'image/*',
                         ],
                         'mimeTypesMessage' => 'Please upload a valid Image',
-                    ])
+                    ]),
                 ],
             ])
-            ->addEventListener(FormEvents::PRE_SET_DATA,$listener)
-            ;      
+            ->addEventListener(FormEvents::PRE_SET_DATA, $listener)
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -5,6 +5,16 @@
 
 {% block body %}
 <div class="container">
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <div class="row align-items-end">
+            <div class="col-12 col-lg-2">
+                <p class="text-end">
+                    <a href="{{ path('trickUpdate', {'id': trick.id}) }}" class="text-dark"><i class="bi bi-pencil-fill"></i></a>
+                    <a href="{{ path('trickDelete', {'id': trick.id}) }}" class="text-dark ms-3 delete"><i class="bi bi-trash-fill"></i></a>
+                </p>            
+            </div>
+        </div>
+    {% endif %}
     <div class="row py-5">
         {% for image in trick.images %}
             <div class="col-12 col-lg-2">
