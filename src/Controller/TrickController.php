@@ -33,8 +33,7 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $trick->setSlug($slugger->slug($trick->getName())->toString());
-            //TODO : Change this with connected User
-            $trick->setUser($userRepository->findBy([], [], 1, 0)[0]);
+            $trick->setUser($this->getUser());
 
             foreach ($trick->getImages() as $image) {
                 if (null !== $image->getFile()) {
@@ -70,8 +69,7 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $trick->setSlug($slugger->slug($trick->getName())->toString());
-            //TODO : Change this with connected User
-            $trick->setUser($userRepository->findBy([], [], 1, 0)[0]);
+            $trick->setUser($this->getUser());
 
             foreach ($trick->getImages() as $image) {
                 if (null !== $image->getFile()) {
@@ -122,8 +120,7 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setCreatedAt(new \DateTimeImmutable());
             $comment->setTrick($trick);
-            //TODO : Change this with connected User
-            $comment->setUser($userRepository->findBy([], [], 1, 0)[0]);
+            $comment->setUser($this->getUser());
 
             $this->getDoctrine()->getManager()->persist($comment);
             $this->getDoctrine()->getManager()->flush();

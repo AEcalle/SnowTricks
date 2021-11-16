@@ -29,7 +29,7 @@
         {% endfor %}
     </div>
     <div class="row py-5">
-        <div class="col-12">
+        <div class="col-12" id="trickDescription">
             {{ trick.description }}
         </div>
     </div>
@@ -38,6 +38,7 @@
             Group : {{ trick.category.name }}
         </div>
     </div>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
     <hr>
         <div class="row py-5" id="CommentForm">
             <div class="col-12">
@@ -56,6 +57,7 @@
                 {{ form_end(form) }}
             </div>
         </div>
+    {% endif %}
     <hr>
     {% for comment in comments %}
         <div class="row py-5 align-items-center">
@@ -63,7 +65,7 @@
                 <img class="img-fluid w-100 rounded-circle" src="{{ comment.user.picture }}" alt="">
             </div>
             <div class="col-8 col-lg-11">
-                <p>{{ comment.content }}</p>
+                <p class="comment-content">{{ comment.content }}</p>
                 <p class="fst-italic small">
                     Le <span class="fw-bold">{{ comment.createdAt|date('d/m/Y') }}</span>
                     à <span class="fw-bold">{{ comment.createdAt|date('H:i') }}</span>
