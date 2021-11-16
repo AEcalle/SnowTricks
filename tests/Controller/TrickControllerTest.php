@@ -34,4 +34,16 @@ class TrickControllerTest extends WebTestCase
 
         $this->assertCount(($nbComments + 1) > 5 ? 5 : ($nbComments + 1), $crawler->filter('.comment-content'));
     }
+
+    public function loadMore()
+    {
+        $client = static::createClient();
+        $entityManager = $client->getContainer()->get('doctrine.orm.default_entity_manager');
+        $nbTricks = count($entityManager->getRepository(Trick::class)->findAll());
+
+        $crawler = $client->request('GET', 'trick/loadMore/15');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertCount($nbTricks > 30 ? 15 : ($nbTricks-15), $crawler->filter('.trickNameLink'));
+    }
 }
