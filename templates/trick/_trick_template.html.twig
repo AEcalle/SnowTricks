@@ -7,12 +7,16 @@
                 <img class="card-img-top" src="http://via.placeholder.com/640x360" alt="Card image cap">
                 <div class="card-body">
                     <p>
-                        <a href="{{ path('trick', {'slug': trick.slug}) }}">{{ trick.name }}</a>
+                        <a class="trickNameLink" href="{{ path('trick', {'slug': trick.slug}) }}">{{ trick.name }}</a>
                     </p>
-                    <p class="text-end">
-                        <a href="{{ path('trickUpdate', {'id': trick.id}) }}" class="text-dark"><i class="bi bi-pencil-fill"></i></a>
-                        <a href="{{ path('trickDelete', {'id': trick.id}) }}" class="text-dark ms-3 delete"><i class="bi bi-trash-fill"></i></a>
-                    </p>
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <p class="text-end">
+                            <a href="{{ path('trickUpdate', {'id': trick.id}) }}" class="text-dark"><i class="bi bi-pencil-fill"></i></a>
+                            {% if is_granted('delete', trick) %}
+                                <a href="{{ path('trickDelete', {'id': trick.id}) }}" class="text-dark ms-3 delete"><i class="bi bi-trash-fill"></i></a>
+                            {% endif %}
+                        </p>
+                    {% endif %}
                 </div>
             </div>
         </div>

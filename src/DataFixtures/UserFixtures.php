@@ -8,9 +8,17 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class UserFixtures extends Fixture
 {
+    private $userPasswordHasherInterface;
+
+    public function __construct(UserPasswordHasherInterface $userPasswordHasherInterface)
+    {
+        $this->userPasswordHasherInterface = $userPasswordHasherInterface;
+    }
+    
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr FR');
@@ -20,10 +28,16 @@ final class UserFixtures extends Fixture
 
             $user->setUsername($faker->userName());
             $user->setEmail($faker->email());
-            $user->setPassword($faker->password());
+            $user->setPassword(
+                $this->userPasswordHasherInterface->hashPassword(
+                        $user,
+                        $faker->password()
+                    )
+                );
             $user->setPicture($faker->imageUrl(100, 100, 'profile'));
-            $user->setIsVerified(true);
-            $user->setToken($faker->word());
+            $user->setCreatedAt(null);
+            $user->setRegistrationToken(null);
+            $user->setNewPasswordToken(null);
 
             $manager->persist($user);
             $this->addReference(User::class.'_'.$i, $user);
