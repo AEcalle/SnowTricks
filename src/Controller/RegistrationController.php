@@ -23,7 +23,7 @@ class RegistrationController extends AbstractController
         MailerSender $mailerSender
     ): Response
     {
-        $user = new User();
+        $user = new User(null);
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -56,7 +56,7 @@ class RegistrationController extends AbstractController
     public function validation(User $user): Response
     {
         $user->setRegistrationToken(null);
-        $user->setCreatedAt(new \DateTimeImmutable());
+        $user->createdAt = new \DateTimeImmutable();
         $this->getDoctrine()->getManager()->persist($user);
         $this->getDoctrine()->getManager()->flush();
 

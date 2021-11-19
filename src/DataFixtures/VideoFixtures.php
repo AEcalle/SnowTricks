@@ -17,7 +17,7 @@ final class VideoFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create('fr FR');
 
-        for ($i = 0; $i < 10; ++$i) {
+        for ($i = 0; $i < 30; ++$i) {
             $video = new Video();
 
             $video->setUrl('https://www.youtube.com/embed/SQyTWk7OxSI');

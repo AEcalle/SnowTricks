@@ -21,7 +21,7 @@ final class UserChecker implements UserCheckerInterface
             return;
         }
 
-        if (null === $user->getCreatedAt()) {
+        if (null === $user->createdAt) {
             throw new CustomUserMessageAccountStatusException('Your email is not verified. Please click on the link in the email that has been sent to you.');
         }
     }

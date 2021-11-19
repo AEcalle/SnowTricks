@@ -27,7 +27,9 @@
             <nav id="navbar" class="navbar">
             <ul>
                 <li><a class="nav-link active" href="{{ path('home') }}">Home</a></li>
-                <li><a class="nav-link scrollto" href="#listTrickTitle">Tricks</a></li>
+                {% if app.request.attributes.get('_route') == 'home' %}
+                    <li><a class="nav-link scrollto" href="#listTrickTitle">Tricks</a></li>
+                {% endif %}
                 {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li><a class="nav-link" href="{{ path('login') }}">Sign in</a></li>
                     <li><a class="nav-link" href="{{ path('app_register') }}">Sign up</a></li>
@@ -42,7 +44,7 @@
         </header><!-- End Header -->
         <!-- ======= Hero Section ======= -->
         <section id="hero">
-            <div class="hero-container" data-aos="fade-up">
+            <div class="hero-container" data-aos="fade-up" {% if trick.images[0] is defined %}style="background:url({{asset('build/images/'~trick.images[0].filename)}});background-size:cover;"{% endif %}>
             <h1>{% block h1 %}{% endblock %}</h1>
             <h2>{% block slogan %}{% endblock %}</h2>
             </div>

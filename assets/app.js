@@ -42,8 +42,10 @@ const loadMore = () => {
         });
 }
 
-const deleteConfirmation = () => {
-    return window.confirm('Comfirm you want to delete this trick.');
+const deleteConfirmation = (e) => {
+    if (! confirm('Comfirm you want to delete this trick.')) {
+        e.preventDefault();
+    }
 }
 
 const addFormToCollection = (e) => {
@@ -104,18 +106,26 @@ const videoPreview = (e) => {
 
 };
 
+const seeMedias = (e) => {
+    document.querySelectorAll('.medias').forEach(
+        row => row.setAttribute('class', 'row py-5'));
+}
+
 document
     .querySelectorAll('.loadMoreButton')
     .forEach(btn => btn.addEventListener('click', loadMore));
 document
     .querySelectorAll('.delete')
-    .forEach(item => item.addEventListener('click', deleteConfirmation));
+    .forEach(item => item.addEventListener('click', deleteConfirmation, false));
 document
     .querySelectorAll('.add_item_link')
     .forEach(btn => btn.addEventListener('click', addFormToCollection));
 document
     .querySelectorAll('.remove_image_link')
     .forEach(btn => btn.addEventListener('click', removeImageLink));
+document
+    .querySelectorAll('.seeMediasButton')
+    .forEach(btn => btn.addEventListener('click', seeMedias));
 
 const hiddenImages = document.querySelectorAll('.image input[type="hidden"]');
 const length = hiddenImages.length;

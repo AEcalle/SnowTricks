@@ -24,7 +24,7 @@ final class UserFixtures extends Fixture
         $faker = Factory::create('fr FR');
 
         for ($i = 0; $i < 5; ++$i) {
-            $user = new User();
+            $user = new User(new \DateTimeImmutable());
 
             $user->setUsername($faker->userName());
             $user->setEmail($faker->email());
@@ -35,7 +35,6 @@ final class UserFixtures extends Fixture
                     )
                 );
             $user->setPicture($faker->imageUrl(100, 100, 'profile'));
-            $user->setCreatedAt(null);
             $user->setRegistrationToken(null);
             $user->setNewPasswordToken(null);
 
