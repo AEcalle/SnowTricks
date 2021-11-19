@@ -39,7 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $picture;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $createdAt;
+    public ?\DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'uuid', nullable: true)]
     private ?Uuid $registrationToken;
@@ -65,10 +65,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class, cascade: ['persist'])]
     private Collection $comments;
 
-    public function __construct()
+    public function __construct(?\DateTimeImmutable $createdAt)
     {
         $this->tricks = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->createdAt = $createdAt;
     }
 
     public function getId(): ?int
@@ -114,16 +115,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPicture(?string $picture): void
     {
         $this->picture = $picture;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): void
-    {
-        $this->createdAt = $createdAt;
     }
 
     public function getRegistrationToken(): ?Uuid
