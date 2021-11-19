@@ -10,21 +10,22 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
 
 final class CommentFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('fr FR');
+        $contents = ['I like this trick', 'Easy one', 'Too diffcult for me', '
+        I will try it soon', 'Nice !', 'The most beautifult trick ever !', 'Hi everyone !',
+        'I love Snowboard', 'I love this website', 'Where can i learn SnowTricks ? ', ];
 
         for ($i = 0; $i < 100; ++$i) {
             $comment = new Comment();
 
-            $comment->setCreatedAt(new \DateTimeImmutable());
-            $comment->setContent($faker->paragraph(mt_rand(1, 3)));
-            $comment->setUser($this->getReference(User::class.'_'.$faker->numberBetween(0, 4)));
-            $comment->setTrick($this->getReference(Trick::class.'_'.$faker->numberBetween(0, 9)));
+            $comment->setCreatedAt(new \DateTimeImmutable(date('Y-m-d H:i:s', mt_rand(1634745672, 1637424072))));
+            $comment->setContent($contents[mt_rand(0, count($contents) - 1)]);
+            $comment->setUser($this->getReference(User::class.'_'.mt_rand(0, 4)));
+            $comment->setTrick($this->getReference(Trick::class.'_'.mt_rand(0, 9)));
 
             $manager->persist($comment);
         }

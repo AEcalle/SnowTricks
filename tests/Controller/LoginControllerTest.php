@@ -19,7 +19,7 @@ class LoginControllerTest extends WebTestCase
         $userPasswordHasher = $client->getContainer()->get('security.user_password_hasher');
 
         $testUser = $entityManager->getRepository(User::class)->findOneBy([]);
-        $testUser->setCreatedAt(new \DateTimeImmutable());
+        $testUser->createdAt = new \DateTimeImmutable();
 
         $testUser->setPassword(
             $userPasswordHasher->hashPassword(
@@ -53,7 +53,7 @@ class LoginControllerTest extends WebTestCase
         $userPasswordHasher = $client->getContainer()->get('security.user_password_hasher');
 
         $testUser = $entityManager->getRepository(User::class)->findOneBy([]);
-        $testUser->setCreatedAt(new \DateTimeImmutable());
+        $testUser->createdAt = new \DateTimeImmutable();
 
         $testUser->setPassword(
             $userPasswordHasher->hashPassword(

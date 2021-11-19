@@ -26,7 +26,7 @@ class ResetPasswordController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $userRepository->findOneBy(['username' => $form->get('username')->getData()]);
 
-            if (! $user) {
+            if (!$user) {
                 $this->addFlash('notice', 'Unknown username.');
 
                 return $this->redirectToRoute('forgotten_password');
@@ -56,8 +56,8 @@ class ResetPasswordController extends AbstractController
                 $userPasswordHasherInterface->hashPassword(
                         $user,
                         $form->get('password')->getData()
-                    )
-                );
+                )
+            );
             $user->setNewPasswordToken(null);
 
             $this->getDoctrine()->getManager()->persist($user);
