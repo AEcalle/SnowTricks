@@ -19,11 +19,10 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(
         Request $request,
-        UserPasswordHasherInterface $userPasswordHasherInterface, 
+        UserPasswordHasherInterface $userPasswordHasherInterface,
         MailerSender $mailerSender
-    ): Response
-    {
-        $user = new User();
+    ): Response {
+        $user = new User(null);
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -32,7 +31,7 @@ class RegistrationController extends AbstractController
             $userPasswordHasherInterface->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
-                )
+            )
             );
 
             $user->setRegistrationToken(Uuid::v4());
@@ -56,7 +55,7 @@ class RegistrationController extends AbstractController
     public function validation(User $user): Response
     {
         $user->setRegistrationToken(null);
-        $user->setCreatedAt(new \DateTimeImmutable());
+        $user->validedAt = new \DateTimeImmutable();
         $this->getDoctrine()->getManager()->persist($user);
         $this->getDoctrine()->getManager()->flush();
 

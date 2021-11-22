@@ -15,11 +15,11 @@ final class TaskVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
-        if (! in_array($attribute, [self::DELETE])) {
+        if (!in_array($attribute, [self::DELETE])) {
             return false;
         }
 
-        if (! $subject instanceof Trick) {
+        if (!$subject instanceof Trick) {
             return false;
         }
 
@@ -30,7 +30,7 @@ final class TaskVoter extends Voter
     {
         $user = $token->getUser();
 
-        if (! $user instanceof User) {
+        if (!$user instanceof User) {
             return false;
         }
 

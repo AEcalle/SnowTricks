@@ -139,7 +139,7 @@ class Trick
 
     public function addImage(Image $image): self
     {
-        if (! $this->images->contains($image)) {
+        if (!$this->images->contains($image)) {
             $this->images->add($image);
             $image->setTrick($this);
         }
@@ -170,7 +170,7 @@ class Trick
 
     public function addVideo(Video $video): self
     {
-        if (! $this->videos->contains($video)) {
+        if (!$this->videos->contains($video)) {
             $this->videos->add($video);
             $video->setTrick($this);
         }

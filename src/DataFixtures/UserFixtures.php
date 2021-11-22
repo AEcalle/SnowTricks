@@ -18,13 +18,13 @@ final class UserFixtures extends Fixture
     {
         $this->userPasswordHasherInterface = $userPasswordHasherInterface;
     }
-    
+
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr FR');
 
         for ($i = 0; $i < 5; ++$i) {
-            $user = new User();
+            $user = new User(new \DateTimeImmutable());
 
             $user->setUsername($faker->userName());
             $user->setEmail($faker->email());
@@ -32,10 +32,9 @@ final class UserFixtures extends Fixture
                 $this->userPasswordHasherInterface->hashPassword(
                         $user,
                         $faker->password()
-                    )
+                )
                 );
             $user->setPicture($faker->imageUrl(100, 100, 'profile'));
-            $user->setCreatedAt(null);
             $user->setRegistrationToken(null);
             $user->setNewPasswordToken(null);
 

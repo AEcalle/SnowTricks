@@ -23,7 +23,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255, unique:true)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     #[Assert\NotBlank]
     private string $username;
 
@@ -39,7 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $picture;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $createdAt;
+    public ?\DateTimeImmutable $validedAt;
 
     #[ORM\Column(type: 'uuid', nullable: true)]
     private ?Uuid $registrationToken;
@@ -65,10 +65,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class, cascade: ['persist'])]
     private Collection $comments;
 
-    public function __construct()
+    public function __construct(?\DateTimeImmutable $validedAt)
     {
         $this->tricks = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->validedAt = $validedAt;
     }
 
     public function getId(): ?int
@@ -116,16 +117,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->picture = $picture;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
     public function getRegistrationToken(): ?Uuid
     {
         return $this->registrationToken;
@@ -156,7 +147,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addTrick(Trick $trick): self
     {
-        if (! $this->tricks->contains($trick)) {
+        if (!$this->tricks->contains($trick)) {
             $this->tricks->add($trick);
             $trick->setUser($this);
         }
@@ -183,7 +174,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addComment(Comment $comment): self
     {
-        if (! $this->comments->contains($comment)) {
+        if (!$this->comments->contains($comment)) {
             $this->comments->add($comment);
             $comment->setUser($this);
         }
@@ -234,7 +225,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 }

@@ -21,7 +21,7 @@ final class ImageType extends AbstractType
         $listener = function (PreSetDataEvent $event): void {
             $image = $event->getData();
             $form = $event->getForm();
-            if (! $image) {
+            if (!$image) {
                 return;
             }
 

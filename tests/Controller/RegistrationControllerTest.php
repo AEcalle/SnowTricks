@@ -57,6 +57,6 @@ class RegistrationControllerTest extends WebTestCase
         $client->followRedirect();
 
         $this->assertResponseIsSuccessful();
-        $this->assertNotNull($user->getCreatedAt()); 
+        $this->assertNotNull($user->validedAt); 
     }
 }

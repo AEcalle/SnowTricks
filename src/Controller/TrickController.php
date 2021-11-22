@@ -7,51 +7,34 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Form\CommentType;
-use App\Form\TrickType;
 use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
-use App\Repository\UserRepository;
-use App\Service\FileUploader;
+use App\Service\CommentManager;
+use App\Service\FormHandler;
+use App\Service\TrickManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 class TrickController extends AbstractController
 {
     #[Route('trick-create', name: 'trickCreate')]
-    public function create(Request $request, SluggerInterface $slugger, FileUploader $fileUploader, UserRepository $userRepository): Response
+    public function create(FormHandler $formHandler, TrickManager $trickManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $trick = new Trick();
+        $form = $formHandler->handle(
+            new Trick(),
+            function ($trick) use ($trickManager) {
+                $trickManager->save($trick);
 
-        $form = $this->createForm(TrickType::class, $trick)->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setSlug($slugger->slug($trick->getName())->toString());
-            $trick->setUser($this->getUser());
-
-            foreach ($trick->getImages() as $image) {
-                if (null !== $image->getFile()) {
-                    $fileName = $fileUploader->upload(
-                        'build/images/',
-                        $image->getFile()
-                    );
-                    $image->setFileName($fileName);
-                }
-            }
-
-            $this->getDoctrine()->getManager()->persist($trick);
-            $this->getDoctrine()->getManager()->flush();
-
-            $this->addFlash('notice', 'Trick saved !');
-
-            return $this->redirectToRoute('trickCreate');
-        }
+                return $this->redirectToRoute('trickCreate');
+            },
+            'Trick saved !'
+        );
 
         return $this->renderForm('trick/create.html.twig', [
             'form' => $form,
@@ -59,42 +42,29 @@ class TrickController extends AbstractController
     }
 
     #[Route('trick-update/{id}', name: 'trickUpdate')]
-    public function update(Trick $trick, Request $request,
-    SluggerInterface $slugger, FileUploader $fileUploader,
-    UserRepository $userRepository): Response
-    {
+    public function update(
+        Trick $trick,
+        FormHandler $formHandler,
+        TrickManager $trickManager
+    ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $form = $this->createForm(TrickType::class, $trick)->handleRequest($request);
+        $form = $formHandler->handle(
+            $trick,
+            function (Trick $trick) use ($trickManager) {
+                $trickManager->save($trick);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setSlug($slugger->slug($trick->getName())->toString());
-            $trick->setUser($this->getUser());
-
-            foreach ($trick->getImages() as $image) {
-                if (null !== $image->getFile()) {
-                    $fileName = $fileUploader->upload(
-                        'build/images/',
-                        $image->getFile()
-                    );
-                    $image->setFilename($fileName);
-                }
-            }
-
-            $this->getDoctrine()->getManager()->persist($trick);
-            $this->getDoctrine()->getManager()->flush();
-
-            $this->addFlash('notice', 'Trick saved !');
-
-            return $this->redirectToRoute('trickUpdate', ['id' => $trick->getId()]);
-        }
+                return $this->redirectToRoute('trickUpdate', ['id' => $trick->getId()]);
+            },
+            'Trick saved !'
+        );
 
         return $this->renderForm('trick/update.html.twig', [
             'form' => $form,
         ]);
     }
 
-    #[IsGranted("delete", subject: "trick")]
+    #[IsGranted('delete', subject: 'trick')]
     #[Route('trick-delete/{id}', name: 'trickDelete')]
     public function delete(Trick $trick, Filesystem $filesystem): Response
     {
@@ -111,19 +81,14 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{slug}', name: 'trick')]
-    public function show(Trick $trick, Request $request, CommentRepository $commentRepository, UserRepository $userRepository): Response
+    public function show(Trick $trick, Request $request, CommentRepository $commentRepository, CommentManager $commentManager): Response
     {
         $comment = new Comment();
 
         $form = $this->createForm(CommentType::class, $comment)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $comment->setCreatedAt(new \DateTimeImmutable());
-            $comment->setTrick($trick);
-            $comment->setUser($this->getUser());
-
-            $this->getDoctrine()->getManager()->persist($comment);
-            $this->getDoctrine()->getManager()->flush();
+            $commentManager->save($comment, $trick);
 
             $this->addFlash('notice', 'Success !');
 
