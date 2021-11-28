@@ -6,7 +6,7 @@ namespace App\Service;
 
 use ReflectionClass;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\Test\FormInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 final class FormHandler
